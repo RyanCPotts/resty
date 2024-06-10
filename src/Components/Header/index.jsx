@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Header.scss';
 
-function Header() {
+const Header = ()=> {
   return (
     <header>
       <h1>- - -  RESTy  - - -</h1>

@@ -1,10 +1,18 @@
 import React from 'react';
 
-const Results =(data)=>{
+const Results =({data, headers, loading})=>{
 
     return (
       <section>
-        <pre>{data ? JSON.stringify(data, undefined, 2) : null}</pre>
+        {
+          loading?(<p>DATA IS LOADING</p>):(
+            <>
+            <pre>{headers?JSON.stringify(headers, null, 2): null}</pre>
+            <pre>{data?JSON.stringify(data, null, 2): null}</pre>
+            </>
+          )
+        
+        }
       </section>
     );
   

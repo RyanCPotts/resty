@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Form.scss';
 
-const Form = (handleApiCall)=>{
+const Form = ({handleApiCall})=>{
 
   function handleSubmit(e) {
     e.preventDefault();

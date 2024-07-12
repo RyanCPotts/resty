@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import axios from 'axios'
+import {useEffect} from 'react'
 
 import './App.scss';
 
@@ -32,7 +33,8 @@ const [headers, setHeaders]=useState(null);
 const [requestParams, setRequestParams]=useState({});
 const [loading, setLoading]=useState(false);
 
-  const callApi = async (params) => {
+  useEffect(()=>{
+  const callApi = async () => {
     // mock output
     // const data = {
     //   count: 2,
@@ -44,11 +46,22 @@ const [loading, setLoading]=useState(false);
     // setData({...newData, data});
 
     setLoading(true)
-    setRequestParams(params)
+    
       try{
-        const response = await axios.get('https://swapi.dev/api/people/1/')
-        setData(response.data)
-        setHeaders(response.headers)
+        // const response = await axios.get('https://swapi.dev/api/people/1/')
+        // const{url, method, body} = requestParams;
+        const options = {
+          method:requestParams.method,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body:requestParams.method != 'GET' && requestParams.body?JSON.stringify(requestParams.body):undefined
+        }
+        const responseData = await fetch(requestParams.url, options)
+        const response = await responseData.json()
+        setData(response)
+        // setHeaders(Object.fromEntries(responseData.headers.entries()))
+        setHeaders(responseData.headers)
       }
         catch(e){console.error('cannot retrieve data', e)}
         
@@ -63,13 +76,21 @@ const [loading, setLoading]=useState(false);
 
   }
 
+  if(Object.keys(requestParams).length !==0){
+    callApi();
+  }
+  },[requestParams]);
+
+  const handleApiCall = (params)=>{
+    setRequestParams(params)
+  }
  
     return (
       <React.Fragment>
         <Header />
         <div>Request Method: {requestParams.method}</div>
         <div>URL: {requestParams.url}</div>
-        <Form handleApiCall={callApi} />
+        <Form handleApiCall={handleApiCall} />
         <Results data={data} headers = {headers} loading = {loading} />
         <Footer />
       </React.Fragment>
